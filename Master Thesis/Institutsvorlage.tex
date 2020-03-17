@@ -1,0 +1,163 @@
+% LaTeX-Vorlage für die Titelseite und Selbständigkeitserklärung einer Abschlussarbeit
+% basierend auf der vorigen Institutsvorlage des Instituts für Informatik
+% sowie der Vorlage für Promotionsarbeiten.
+%
+% erweitert: 2014-06-12 Dennis Schneider <dschneid@informatik.hu-berlin.de>
+
+% gepunktete Linie unter Objekt:
+\newcommand{\TitelPunkte}[1]{%
+  \tikz[baseline=(todotted.base)]{
+    \node[inner sep=1pt,outer sep=0pt] (todotted) {#1};
+    \draw[dotted] (todotted.south west) -- (todotted.south east);
+  }%
+}%
+
+% gepunktete Linie mit gegebener Länge:
+\newcommand{\TitelPunktLinie}[1]{\TitelPunkte{\makebox[#1][l]{}}}
+
+\makeatletter
+
+\newcommand*{\@titelTitel}{Titel der Arbeit}
+\newcommand{\titel}[1]{\renewcommand*{\@titelTitel}{#1}} % Titel der Arbeit
+\newcommand*{\@titelArbeit}{Arbeitstyp}
+\newcommand{\typ}[1]{\renewcommand*{\@titelArbeit}{#1}} % Typ der Arbeit
+\newcommand*{\@titelGrad}{akademischer Grad}
+\newcommand{\grad}[1]{\renewcommand*{\@titelGrad}{#1}} % Akademischer Grad
+\newcommand*{\@titelAutor}{Autor}
+\newcommand{\autor}[1]{\renewcommand*{\@titelAutor}{#1}} % Autor der Arbeit
+\newcommand*{\@titelGeburtsdatum}{\TitelPunktLinie{2cm}}
+\newcommand{\gebdatum}[1]{\renewcommand*{\@titelGeburtsdatum}{#1}} % Geburtsdatum des Autors
+\newcommand*{\@titelGeburtsort}{\TitelPunktLinie{5cm}}
+\newcommand{\gebort}[1]{\renewcommand*{\@titelGeburtsort}{#1}} % Geburtsort des Autors
+\newcommand*{\@titelGutachterA}{\TitelPunktLinie{5cm}}
+\newcommand*{\@titelGutachterB}{\TitelPunktLinie{5cm}}
+\newcommand{\gutachter}[2]{\renewcommand*{\@titelGutachterA}{#1}\renewcommand*{\@titelGutachterB}{#2}} % Erst- und Zweitgutachter
+\newcommand*{\@titelEinreichungsdatum}{\TitelPunktLinie{3cm}} % Datum der Einreichung, wird nicht vom Studenten ausgefüllt
+\newcommand*{\@titelVerteidigungsdatum}{} % Verteidigungstext, wird nicht vom Studenten ausgefüllt
+\newcommand{\mitverteidigung}{\renewcommand*{\@titelVerteidigungsdatum}{verteidigt am: \,\,\TitelPunktLinie{3cm}}} % Verteidigungsplatzhalter erzeugen
+\newcommand*{\@wastwoside}{}
+
+% Titelseite erzeugen:
+\newcommand{\makeTitel}{%
+	% Speichere, ob doppelseitiges Layout gewählt wurde:
+\if@twoside%
+	\renewcommand*{\@wastwoside}{twoside}
+\else
+	\renewcommand*{\@wastwoside}{twoside=false}
+\fi
+	\KOMAoptions{twoside = false}% Erzwinge einseitiges Layout (erzeugt eine Warnung)
+
+	\begin{titlepage}
+		% Ändern der Einrückungen
+		\newlength{\parindentbak} \setlength{\parindentbak}{\parindent}
+		\newlength{\parskipbak} \setlength{\parskipbak}{\parskip}
+		\setlength{\parindent}{0pt}
+		\setlength{\parskip}{\baselineskip}
+
+		\thispagestyle{empty}
+
+		\begin{minipage}[c][3cm][c]{12cm}
+			\textsc{%
+				% optischer Randausgleich per Hand:
+				\hspace{-0.4mm}\textls*[68]{\Large Humboldt-Universität zu Berlin}\\
+				\normalsize \textls*[45]{
+					Mathematisch-Naturwissenschaftliche Fakultät\\
+					Institut für Informatik
+				}
+			}
+		\end{minipage}
+		\hfill
+
+
+		% Also wenn schon serifenlose Schriften (Titel), dann ganz oder gar nicht
+		\sffamily
+
+		\vfill
+
+		\begin{center}
+		\begin{doublespace}
+			\vspace{\baselineskip}
+			{\LARGE \textbf{\@titelTitel}}\\
+			%\vspace{1\baselineskip}
+			{\Large
+				\@titelArbeit\\
+				zur Erlangung des akademischen Grades\\
+				\@titelGrad
+				\vspace{\baselineskip}
+			}
+		\end{doublespace}
+		\end{center}
+
+		\vfill
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+		{\large \raggedleft
+			\begin{tabularx}{\textwidth}{l@{\,\,\raggedright~}L} % verbreiterter Abstand zwischen Feldern wurde gewünscht
+				eingereicht von: & \@titelAutor\\
+				geboren am: & {\@titelGeburtsdatum}\\
+				geboren in: & \@titelGeburtsort
+				\vspace{0.5\baselineskip}\\
+				Gutachter/innen: & \@titelGutachterA \\
+					& \@titelGutachterB
+				\vspace{0.5\baselineskip}\\
+				eingereicht am: & \@titelEinreichungsdatum \hfill \@titelVerteidigungsdatum
+			\end{tabularx}}
+			\vspace{-1\baselineskip}\\\phantom{x} % Übler Hack, um eine Warnung wg. einer zu leeren hbox zu verhindern
+		% Wiederherstellen der Einrückung
+		\setlength{\parindent}{\parindentbak}
+		\setlength{\parskip}{\parskipbak}
+	\end{titlepage}
+
+	% Aufräumen:
+	\let\@titelTitel\undefined
+	\let\titel\undefined
+	\let\@titelArbeit\undefined
+	\let\typ\undefined
+	\let\@titelGrad\undefined
+	\let\grad\undefined
+	\let\@titelAutor\undefined
+	\let\autor\undefined
+	\let\@titelGeburtsdatum\undefined
+	\let\gebdatum\undefined
+	\let\@titelGeburtsort\undefined
+	\let\gebort\undefined
+	\let\@titelGutachterA\undefined
+	\let\@titelGutachterB\undefined
+	\let\gutachter\undefined
+	\let\@titelEinreichungsdatum\undefined
+	\let\einreichungsdatum\undefined
+	\let\@titelVerteidigungsdatum\undefined
+	\let\verteidigungsdatum\undefined
+
+	\KOMAoptions{\@wastwoside}% Stelle alten Modus (ein-/doppelseitig) wieder her
+	\let\@wastwoside\undefined
+	\cleardoublepage % ganzes Blatt für die Titelseite
+}
+
+% Als Allerallerletztes kommt Selbständigkeitserklärung:
+% Aufruf mit dem Datum in deutscher und englischer Form
+\newcommand{\selbstaendigkeitserklaerung}[1]{%
+	\cleardoublepage% Wieder auf eine eigene Doppelseite
+	{\parindent0cm
+		\subsection*{Selbständigkeitserklärung}
+		Ich erkläre hiermit, dass ich die vorliegende Arbeit selbständig verfasst
+		und noch nicht für andere Prüfungen eingereicht habe.
+		Sämtliche Quellen einschließlich Internetquellen, die unverändert oder
+		abgewandelt wiedergegeben werden, insbesondere Quellen für Texte, Grafiken,
+		Tabellen und Bilder, sind als solche kenntlich gemacht. Mir ist bekannt,
+		dass bei Verstößen gegen diese Grundsätze ein Verfahren wegen
+		Täuschungsversuchs bzw. Täuschung eingeleitet wird.
+		\vspace{3\baselineskip}
+
+		{\raggedright Berlin, den #1 \hfill \TitelPunktLinie{8cm}\\}
+%		\vspace{3\baselineskip}
+%
+% 		\selectlanguage{english}
+% 		\subsection*{Statement of authorship}
+% 		Hier würde die englische Selbständigkeitserklärung folgen, falls gewünscht. Doch es fehlt eine akzeptable Übersetzung.
+% 		\vspace{3\baselineskip}
+%
+% 		Berlin, #2 \hfill \TitelPunktLinie{6cm}
+	}
+}%
+
+\makeatother
